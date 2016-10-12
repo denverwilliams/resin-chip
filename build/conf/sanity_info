@@ -1,0 +1,3 @@
+SANITY_VERSION 1
+TMPDIR /home/owner/resin-chip/build/tmp
+SSTATE_DIR /home/owner/resin-chip/build/sstate-cache

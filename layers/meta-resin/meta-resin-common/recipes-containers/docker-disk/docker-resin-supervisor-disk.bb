@@ -1,0 +1,113 @@
+require docker-disk.inc
+
+TARGET_REPOSITORY ?= "${SUPERVISOR_REPOSITORY}"
+TARGET_TAG ?= "v2.5.0"
+LED_FILE ?= "/dev/null"
+
+inherit systemd
+
+SRC_URI += " \
+    file://resin-data.mount \
+    file://supervisor.conf \
+    file://resin-supervisor.service \
+    file://update-resin-supervisor \
+    file://update-resin-supervisor.service \
+    file://update-resin-supervisor.timer \
+    "
+
+SYSTEMD_SERVICE_${PN} = " \
+    resin-supervisor.service \
+    update-resin-supervisor.service \
+    update-resin-supervisor.timer \
+    "
+
+FILES_${PN} += " \
+    /resin-data \
+    ${systemd_unitdir} \
+    "
+
+RDEPENDS_${PN} = " \
+    bash \
+    docker \
+    coreutils \
+    resin-vars \
+    systemd \
+    curl \
+    resin-device-uuid \
+    "
+
+python () {
+    # Get the recipe version from supervisor
+    import subprocess
+
+    target_repository = d.getVar('TARGET_REPOSITORY', True)
+    supervisor_repository = d.getVar('SUPERVISOR_REPOSITORY', True)
+    tag_repository = d.getVar('TARGET_TAG', True)
+
+    if not supervisor_repository:
+        bb.fatal("resin-supervisor-disk: One or more needed variables are not available in resin-supervisor-disk. Usually these are provided with a bbappend.")
+
+    # Version 0.0.0 means that the supervisor image was either not preloaded or a custom image was preloaded
+    if target_repository == "" or target_repository != supervisor_repository:
+        d.setVar('SUPERVISOR_VERSION','0.0.0')
+        d.setVar('PV','0.0.0')
+        return
+
+    # Only pull if connectivity - to avoid warnings and delay
+    if connected(d) == "yes":
+        pull_cmd = "docker pull %s:%s" % (target_repository, tag_repository)
+        pull_output = subprocess.Popen(pull_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+
+    # Inspect for fetching the version only if image exists
+    # on Fedora 23 at least, docker has suffered slight changes (https://bugzilla.redhat.com/show_bug.cgi?id=1312934)
+    # hence we need the following workaround until the above bug is fixed:
+    imagechk_cmd = "docker images | grep '^\S*%s\s*%s'" % (target_repository, tag_repository)
+    imagechk_output = subprocess.Popen(imagechk_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+    if imagechk_output == "":
+        bb.fatal("resin-supervisor-disk: No local supervisor images found.")
+    version_cmd = "echo -n $(docker inspect -f '{{range .Config.Env}}{{.}}{{\"\\n\"}}{{end}}' %s:%s | grep '^VERSION=' | tr -d 'VERSION=\"')" % (target_repository, tag_repository)
+    version_output = subprocess.Popen(version_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+    if version_output == "" or version_output == None:
+        bb.fatal("resin-supervisor-disk: Cannot fetch version.")
+    image_id_cmd = "echo -n $(docker inspect -f '{{.Id}}' %s:%s)" % (target_repository, tag_repository)
+    image_id_output = subprocess.Popen(image_id_cmd, shell=True, stdout=subprocess.PIPE).communicate()[0]
+    if image_id_output == "" or image_id_output == None:
+        bb.fatal("resin-supervisor-disk: Cannot fetch image id.")
+    d.setVar('SUPERVISOR_VERSION', "%s-%s" % (version_output, image_id_output.split(':',1)[-1][:12]))
+    d.setVar('PV', "%s+%s" % (version_output, image_id_output.split(':',1)[-1]))
+}
+
+do_install () {
+    # Generate supervisor conf
+    install -d ${D}${sysconfdir}
+    install -m 0755 ${WORKDIR}/supervisor.conf ${D}${sysconfdir}/
+    sed -i -e 's:@SUPERVISOR_REPOSITORY@:${SUPERVISOR_REPOSITORY}:g' ${D}${sysconfdir}/supervisor.conf
+    sed -i -e 's:@TARGET_TAG@:${TARGET_TAG}:g' ${D}${sysconfdir}/supervisor.conf
+    sed -i -e 's:@LED_FILE@:${LED_FILE}:g' ${D}${sysconfdir}/supervisor.conf
+
+    install -d ${D}/resin-data
+
+    install -d ${D}${bindir}
+    install -m 0755 ${WORKDIR}/update-resin-supervisor ${D}${bindir}
+
+    if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
+        install -d ${D}${systemd_unitdir}/system
+
+        # Yocto gets confused if we use strange file names - so we rename it here
+        # https://bugzilla.yoctoproject.org/show_bug.cgi?id=8161
+        install -c -m 0644 ${WORKDIR}/resin-data.mount ${D}${systemd_unitdir}/system/resin\\x2ddata.mount
+
+        install -c -m 0644 ${WORKDIR}/resin-supervisor.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/update-resin-supervisor.service ${D}${systemd_unitdir}/system
+        install -c -m 0644 ${WORKDIR}/update-resin-supervisor.timer ${D}${systemd_unitdir}/system
+        sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
+            -e 's,@SBINDIR@,${sbindir},g' \
+            -e 's,@BINDIR@,${bindir},g' \
+            ${D}${systemd_unitdir}/system/*.service
+    fi
+}
+do_install[vardeps] += "DISTRO_FEATURES TARGET_REPOSITORY LED_FILE"
+
+do_deploy_append () {
+    echo ${SUPERVISOR_VERSION} > ${DEPLOYDIR}/VERSION
+}

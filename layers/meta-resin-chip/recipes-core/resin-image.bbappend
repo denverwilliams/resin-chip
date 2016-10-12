@@ -1,0 +1,1 @@
+# IMAGE_FSTYPES_meta-chip defined in meta-chip
