@@ -13,4 +13,5 @@
 	url = https://github.com/mem/oe-meta-go.git
 [submodule "layers/meta-resin"]
 	path = layers/meta-resin
-	url = https://github.com/resin-os/meta-resin.git
+	url = https://gitlab.ii.org.nz/iichip/meta-resin.git
+	branch = resin
