@@ -11,3 +11,7 @@
 [submodule "layers/oe-meta-go"]
 	path = layers/oe-meta-go
 	url = https://github.com/mem/oe-meta-go.git
+[submodule "layers/meta-resin"]
+	path = layers/meta-resin
+	url = https://gitlab.ii.org.nz/iichip/meta-resin.git
+	branch = resinOS
