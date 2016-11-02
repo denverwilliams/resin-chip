@@ -1,6 +1,7 @@
 IMAGE_FSTYPES_append_chip = " multiubivol"
 
 RESIN_BOOT_PARTITION_FILES_chip = " \
+    ../../../../../config.json:/config.json \
     "
 
 UBIMULTIVOL_BUILD = "rootfs data conf boot"
