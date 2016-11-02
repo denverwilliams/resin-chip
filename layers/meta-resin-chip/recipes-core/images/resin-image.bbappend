@@ -24,3 +24,20 @@ export MKUBIFS_ARGS_boot = "-e 0x1f8000 -c 500 -m 0x4000 -x lzo"
 export ADDITIONAL_MKUBIFS_ARGS_boot = "-r ${RESIN_BOOT_DIR} -o ${DEPLOY_DIR_IMAGE}/boot.ubifs"
 export ADDITIONAL_UBINIZE_ARGS_boot = "mode=ubi\nimage=${DEPLOY_DIR_IMAGE}/boot.ubifs\nvol_id=3\nvol_size=500MiB\nvol_type=dynamic\nvol_name=boot"
 
+IMAGE_POSTPROCESS_COMMAND_append_chip = " \
+    deploy_bundle; \
+    "
+
+deploy_bundle() {
+   # Remove Dir
+   rm -rf ${DEPLOY_DIR_IMAGE}/images
+   # Create artifact Dir
+   mkdir -p ${DEPLOY_DIR_IMAGE}/images
+   cp ${DEPLOY_DIR_IMAGE}/resin-image-chip_resin-ubi.ubi ${DEPLOY_DIR_IMAGE}/images/rootfs.ubi
+   cp ${DEPLOY_DIR_IMAGE}/sunxi-spl.bin ${DEPLOY_DIR_IMAGE}/images
+   cp ${DEPLOY_DIR_IMAGE}/sunxi-spl-with-ecc.bin ${DEPLOY_DIR_IMAGE}/images
+   cp ${DEPLOY_DIR_IMAGE}/u-boot-dtb.bin ${DEPLOY_DIR_IMAGE}/images
+   cp ${DEPLOY_DIR_IMAGE}/zImage-sun5i-r8-chip.dtb ${DEPLOY_DIR_IMAGE}/images/sun5i-r8-chip.dtb
+   cp ${DEPLOY_DIR_IMAGE}/uboot-env.bin ${DEPLOY_DIR_IMAGE}/images
+   cp ${DEPLOY_DIR_IMAGE}/zImage-chip.bin ${DEPLOY_DIR_IMAGE}/images/zImage
+}
