@@ -14,4 +14,4 @@
 [submodule "layers/meta-resin"]
 	path = layers/meta-resin
 	url = https://gitlab.ii.org.nz/iichip/meta-resin.git
-	branch = resin
+	branch = resinOS
