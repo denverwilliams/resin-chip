@@ -10,3 +10,7 @@
 [submodule "layers/meta-resin"]
 	path = layers/meta-resin
 	url = https://github.com/resin-os/meta-resin.git
+[submodule "layers/meta-chip"]
+	path = layers/meta-chip
+	url = https://gitlab.ii.org.nz/iichip/meta-chip.git
+	branch = ResinOS
