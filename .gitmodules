@@ -11,3 +11,7 @@
 	path = layers/meta-chip
 	url = git@gitlab.ii.org.nz:iichip/meta-chip.git
 	branch = ResinOS
+[submodule "layers/meta-resin"]
+	path = layers/meta-resin
+	url = git@gitlab.ii.org.nz:iichip/meta-resin.git
+	branch = ResinOS
