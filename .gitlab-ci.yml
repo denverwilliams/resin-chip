@@ -19,7 +19,5 @@ build:
   tags:
     - Resin
   script:
-  - pwd
-  - sleep 5
-  - source layers/poke/oe-build-env
+  - source layers/poky/oe-init-build-env
   - bitbake resin-image
