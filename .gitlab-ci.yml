@@ -2,6 +2,9 @@
 # Official docker image.
 
 before_script:
+  - apt-get update && apt-get install -y sudo gawk wget git-core diffstat unzip texinfo gcc-multilib \
+build-essential chrpath socat libsdl1.2-dev xterm lzop
+
   # Install ssh-agent if not already installed, it is required by Docker.
   # (change apt-get to yum if you use a CentOS-based image)
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
