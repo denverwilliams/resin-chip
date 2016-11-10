@@ -7,3 +7,11 @@
 [submodule "layers/oe-meta-go"]
 	path = layers/oe-meta-go
 	url = https://github.com/mem/oe-meta-go.git
+[submodule "layers/meta-chip"]
+	path = layers/meta-chip
+	url = git@gitlab.ii.org.nz:iichip/meta-chip.git
+	branch = ResinOS
+[submodule "layers/meta-resin"]
+	path = layers/meta-resin
+	url = git@gitlab.ii.org.nz:iichip/meta-resin.git
+	branch = ResinOSvCI
