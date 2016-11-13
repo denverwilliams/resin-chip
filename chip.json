@@ -1,0 +1,102 @@
+{
+	"slug": "chip",
+	"version": 1,
+	"aliases": [
+		"raspberrypi3"
+	],
+	"name": "C.H.I.P",
+	"arch": "armv7hf",
+	"state": "RELEASED",
+	"isDefault": true,
+	"instructions": [
+		"Download and install <a href=\"http://www.etcher.io/\">Etcher</a>.\nYou can also use another image writer of your choice.\n<br>\nStart the writer and select the Device OS <code>.img</code> file in your downloads folder.\n<br>\nInsert your SD card and press [Burn!].\n<br>\n<strong>Warning!</strong> This will erase your SD card, please make sure any important data is backed up.\n<br>\nWait until it's finished writing.\n<br>\n<strong>Info</strong>: you can repeat the above steps for as many devices as you want, using the same OS image file.",
+		"Safely eject the freshly burnt SD card and insert into the Raspberry Pi 3.",
+		"Connect your Raspberry Pi 3 to the internet, then power it up."
+	],
+	"gettingStartedLink": {
+		"windows": "http://docs.resin.io/#/pages/installing/gettingStarted.md#windows",
+		"osx": "http://docs.resin.io/#/pages/installing/gettingStarted.md#on-mac-and-linux",
+		"linux": "http://docs.resin.io/#/pages/installing/gettingStarted.md#on-mac-and-linux"
+	},
+	"supportsBlink": false,
+	"options": [
+		{
+			"isGroup": true,
+			"name": "network",
+			"message": "Network",
+			"options": [
+				{
+					"message": "Network Connection",
+					"name": "network",
+					"type": "list",
+					"choices": [
+						"ethernet",
+						"wifi"
+					]
+				},
+				{
+					"message": "Wifi SSID",
+					"name": "wifiSsid",
+					"type": "text",
+					"when": {
+						"network": "wifi"
+					}
+				},
+				{
+					"message": "Wifi Passphrase",
+					"name": "wifiKey",
+					"type": "password",
+					"when": {
+						"network": "wifi"
+					}
+				}
+			]
+		},
+		{
+			"isGroup": true,
+			"isCollapsible": true,
+			"collapsed": true,
+			"name": "advanced",
+			"message": "Advanced",
+			"options": [
+				{
+					"message": "Check for updates every X minutes",
+					"name": "appUpdatePollInterval",
+					"type": "number",
+					"min": 0,
+					"default": 1
+				}
+			]
+		}
+	],
+	"yocto": {
+		"machine": "chip",
+		"image": "resin-image",
+		"fstype": "rootfs.ubi",
+		"version": "yocto-jethro",
+		"deployArtifact": "rootfs.ubi",
+		"compressed": true
+	},
+	"configuration": {
+		"config": {
+			"partition": {
+				"primary": 1
+			},
+			"path": "/config.json"
+		}
+	},
+	"initialization": {
+		"options": [
+			{
+				"message": "Select a drive",
+				"type": "drive",
+				"name": "drive"
+			}
+		],
+		"operations": [
+			{
+				"command": "burn"
+			}
+		]
+	}
+}
