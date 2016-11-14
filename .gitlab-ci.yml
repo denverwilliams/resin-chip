@@ -24,3 +24,8 @@ build:
   script:
   - source layers/poky/oe-init-build-env
   - bitbake resin-image
+  artifacts:
+    name:
+      ResinOS
+    paths:
+      - build/tmp/deploy/images/chip/images
