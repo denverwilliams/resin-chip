@@ -23,6 +23,7 @@ build:
     - Resin
   script:
   - source layers/poky/oe-init-build-env
+  - bitbake -c clean docker-resin-supervisor-disk
   - bitbake resin-image
   artifacts:
     name:
