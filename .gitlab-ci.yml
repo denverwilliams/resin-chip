@@ -3,9 +3,9 @@
 
 before_script:
   # Cleanup Docker
-  - 'docker rm -f $(docker ps -a -q)'
-  - 'docker rmi -f $(docker images -q)'
-  - 'ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill'
+  - docker rm -f '$(docker ps -a -q)'
+  - docker rmi -f '$(docker images -q)'
+  - ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
   - sudo rm -rf /var/lib/docker/devicemapper
   - sudo dockerd --storage-driver=devicemapper &
   #- 'sudo apt-get update && apt-get install -y sudo gawk wget git-core diffstat unzip texinfo gcc-multilib \
