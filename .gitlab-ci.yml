@@ -26,12 +26,11 @@ build:
   - bitbake resin-image
   - bitbake -c clean docker-resin-supervisor-disk
   - cd -
-  - ls -la
-  - sleep 100
   - sed -i 's/TARGET_TAG ?= "v2.6.2"/TARGET_TAG ?= "v2.3.0"/g' layers/meta-resin/meta-resin-common/recipes-containers/docker-disk/docker-resin-supervisor-disk.bb
   - rm -rf build/tmp/deploy/images/chip/ubinize_resin-ubi.cfg
   - rm -rf build/tmp/deploy/images/chip/data.ubifs
   - rm -rf build/tmp/deploy/images/chip/data_disk/
+  - source layers/poky/oe-init-build-env
   - bitbake resin-image
   artifacts:
     name:
