@@ -3,7 +3,7 @@
 
 before_script:
   # Cleanup Docker
-  - ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
+  - docker ps -a -q || ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
   - sudo rm -rf /var/lib/docker/devicemapper/
   - sudo dockerd --storage-driver=devicemapper &
   - docker ps -a -q || docker rm -f $(docker ps -a -q)
