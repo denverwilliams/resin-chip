@@ -51,6 +51,6 @@ build:
       ResinOS
     paths:
       - build/tmp/deploy/images/chip/images
-#  cache:
-#    paths:
-#    - build/
+  cache:
+    paths:
+    - build/
