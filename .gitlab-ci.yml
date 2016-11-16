@@ -3,12 +3,12 @@
 
 before_script:
   # Cleanup Docker
-  #- docker ps -a -q && ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
-  #- sudo rm -rf /var/lib/docker/devicemapper/
-  #- sudo dockerd --storage-driver=devicemapper &
-  #- sleep 10
-  #- docker rm $(docker ps -a -q) || echo skip
-  #- docker rmi -f $(docker images -q) || echo skip
+  - docker ps -a -q && ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
+  - sudo rm -rf /var/lib/docker/devicemapper/
+  - sudo dockerd --storage-driver=devicemapper &
+  - sleep 10
+  - docker rm $(docker ps -a -q) || echo skip
+  - docker rmi -f $(docker images -q) || echo skip
   #- 'sudo apt-get update && apt-get install -y sudo gawk wget git-core diffstat unzip texinfo gcc-multilib \
   #build-essential chrpath socat libsdl1.2-dev xterm lzop'
 
@@ -43,11 +43,13 @@ build:
   - source layers/poky/oe-init-build-env
   #- bitbake -f -c compile docker-resin-supervisor-disk
   - bitbake resin-image
+  # Kill Docker
+  - docker ps -a -q && ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
   artifacts:
     name:
       ResinOS
     paths:
       - build/tmp/deploy/images/chip/images
-  cache:
-    paths:
-    - build/
+#  cache:
+#    paths:
+#    - build/
