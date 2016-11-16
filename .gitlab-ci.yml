@@ -4,6 +4,7 @@
 before_script:
   # Cleanup Docker
   - docker ps -a -q && ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
+  - sleep 2
   - sudo rm -rf /var/lib/docker/devicemapper/
   - sudo dockerd --storage-driver=devicemapper &
   - sleep 10
