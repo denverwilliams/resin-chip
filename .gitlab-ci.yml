@@ -7,7 +7,8 @@ before_script:
   - sudo rm -rf /var/lib/docker/devicemapper/
   - sudo dockerd --storage-driver=devicemapper &
   - sleep 10
-  - docker images -q && docker rmi -f $(docker images -q)
+  - docker rm $(docker ps -a -q) || echo skip
+  - docker rmi -f $(docker images -q) || echo skip
   #- 'sudo apt-get update && apt-get install -y sudo gawk wget git-core diffstat unzip texinfo gcc-multilib \
   #build-essential chrpath socat libsdl1.2-dev xterm lzop'
 
