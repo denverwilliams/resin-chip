@@ -38,8 +38,6 @@ build:
   - rm -rf build/tmp/deploy/images/chip/data.ubifs
   - rm -rf build/tmp/deploy/images/chip/boot.ubifs
   - rm -rf build/tmp/deploy/images/chip/conf.ubifs
-  - rm -rf build/tmp/deploy/images/chip/data_disk/
-  - rm -rf build/tmp/deploy/images/chip/data_disk.img
   - rm -rf build/tmp/deploy/images/chip/resin-image-chip*
   - source layers/poky/oe-init-build-env
   #- bitbake -f -c compile docker-resin-supervisor-disk
