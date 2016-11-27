@@ -33,14 +33,17 @@ build:
   #- source layers/poky/oe-init-build-env
   #- bitbake resin-image
   #- cd -
-  - env > /tmp/getenv
   - sed -i 's/TARGET_TAG ?= "v2.6.2"/TARGET_TAG ?= "v2.3.0"/g' layers/meta-resin/meta-resin-common/recipes-containers/docker-disk/docker-resin-supervisor-disk.bb
-  - rm -rf build/tmp/deploy/images/chip/ubinize_resin-ubi.cfg
-  - rm -rf build/tmp/deploy/images/chip/data.ubifs
-  - rm -rf build/tmp/deploy/images/chip/boot.ubifs
-  - rm -rf build/tmp/deploy/images/chip/conf.ubifs
-  - rm -rf build/tmp/deploy/images/chip/resin-image-chip*
+  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/ubinize_resin-ubi.cfg
+  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/data.ubifs
+  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/boot.ubifs
+  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/conf.ubifs
+  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/resin-image-chip*
   - source layers/poky/oe-init-build-env
+  - env > /tmp/getenv
+  - mv tmp tmp.old || echo 'yea, no tmp!'
+  - mkdir -p /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}
+  - ln -s /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME} tmp
   #- bitbake -f -c compile docker-resin-supervisor-disk
   - bitbake resin-image
   - echo Copying image files for flashing with CHIP-tools and http://flash.getchip.com
