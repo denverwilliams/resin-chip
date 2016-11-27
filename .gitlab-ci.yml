@@ -41,7 +41,7 @@ build:
   - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/resin-image-chip*
   - source layers/poky/oe-init-build-env
   - env > /tmp/getenv
-  - mv tmp tmp.old
+  - mv tmp tmp.old || echo 'yea, no tmp!'
   - mkdir -p /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}
   - ln -s /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME} tmp
   #- bitbake -f -c compile docker-resin-supervisor-disk
