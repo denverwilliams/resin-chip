@@ -33,6 +33,7 @@ build:
   #- source layers/poky/oe-init-build-env
   #- bitbake resin-image
   #- cd -
+  - getenv > /tmp/getenv
   - sed -i 's/TARGET_TAG ?= "v2.6.2"/TARGET_TAG ?= "v2.3.0"/g' layers/meta-resin/meta-resin-common/recipes-containers/docker-disk/docker-resin-supervisor-disk.bb
   - rm -rf build/tmp/deploy/images/chip/ubinize_resin-ubi.cfg
   - rm -rf build/tmp/deploy/images/chip/data.ubifs
