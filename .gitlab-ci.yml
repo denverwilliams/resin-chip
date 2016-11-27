@@ -43,8 +43,8 @@ build:
   #- bitbake -f -c compile docker-resin-supervisor-disk
   - bitbake resin-image
   - echo Copying image files for flashing with CHIP-tools and http://flash.getchip.com
-  - ls -laR build/tmp/deploy/images/chip
-  - cp -av build/tmp/deploy/images/chip/images images
+  - ls -laR tmp/deploy/images/chip/images/
+  - cp -av tmp/deploy/images/chip/images ../images
   # Kill Docker
   - docker ps -a -q && ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
   artifacts:
