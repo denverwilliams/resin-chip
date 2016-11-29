@@ -34,6 +34,9 @@ build:
   #- bitbake resin-image
   #- cd -
   - sed -i 's/TARGET_TAG ?= "v2.6.2"/TARGET_TAG ?= "v2.3.0"/g' layers/meta-resin/meta-resin-common/recipes-containers/docker-disk/docker-resin-supervisor-disk.bb
+  # manual interpolation of local.conf... FIXME:
+  - sed -i "s/CI_PROJECT_PATH/${CI_PROJECT_PATH}/g" ./build/conf/local.conf
+  - sed -i "s/CI_BUILD_REF_NAME/${CI_BUILD_REF_NAME}/g" ./build/conf/local.conf
   - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/ubinize_resin-ubi.cfg
   - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/data.ubifs
   - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/boot.ubifs
