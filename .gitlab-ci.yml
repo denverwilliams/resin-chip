@@ -41,6 +41,7 @@ build:
   - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/resin-image-chip*
   - source layers/poky/oe-init-build-env
   #- bitbake -f -c compile docker-resin-supervisor-disk
+  - bitbake -e resin-image
   - bitbake resin-image
   - echo Copying image files for flashing with CHIP-tools and http://flash.getchip.com
   - ls -laR tmp/deploy/images/chip/images/
