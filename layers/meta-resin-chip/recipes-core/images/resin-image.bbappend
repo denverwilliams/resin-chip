@@ -1,7 +1,7 @@
 IMAGE_FSTYPES_append_chip = " multiubivol"
 
 RESIN_BOOT_PARTITION_FILES_chip = " \
-    ${TOPDIR]/../config.json:/config.json \
+    ${TOPDIR}/../config.json:/config.json \
     "
 export UBI_VOLNAME = "resin-ubi"
 
