@@ -33,22 +33,23 @@ build:
   #- source layers/poky/oe-init-build-env
   #- bitbake resin-image
   #- cd -
+  #- rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/ubinize_resin-ubi.cfg
+  #- rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/data.ubifs
+  #- rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/boot.ubifs
+  #- rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/conf.ubifs
+  #- rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/resin-image-chip*
   - sed -i 's/TARGET_TAG ?= "v2.6.2"/TARGET_TAG ?= "v2.3.0"/g' layers/meta-resin/meta-resin-common/recipes-containers/docker-disk/docker-resin-supervisor-disk.bb
   # manual interpolation of local.conf... FIXME:
-  - sed -i "s/CI_PROJECT_PATH/${CI_PROJECT_PATH}/g" ./build/conf/local.conf
-  - sed -i "s/CI_BUILD_REF_NAME/${CI_BUILD_REF_NAME}/g" ./build/conf/local.conf
-  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/ubinize_resin-ubi.cfg
-  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/data.ubifs
-  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/boot.ubifs
-  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/conf.ubifs
-  - rm -rf /dev/shm/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/resin-image-chip*
+  - sed -i "s:CI_PROJECT_PATH:${CI_PROJECT_PATH}:g" ./build/conf/local.conf
+  - sed -i "s:CI_BUILD_REF_NAME:${CI_BUILD_REF_NAME}:g" ./build/conf/local.conf
   - source layers/poky/oe-init-build-env
   #- bitbake -f -c compile docker-resin-supervisor-disk
+  # Env dump would be nice at some point... but currently fails
   # - bitbake -e resin-image
   - bitbake resin-image
   - echo Copying image files for flashing with CHIP-tools and http://flash.getchip.com
-  - ls -laR tmp/deploy/images/chip/images/
-  - cp -av tmp/deploy/images/chip/images ../images
+  - ls -laR ${HOME}/tmpdir/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/images/
+  - cp -av ${HOME}/tmpdir/${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/deploy/images/chip/images/ ../images
   # Kill Docker
   - docker ps -a -q && ps -ef | grep dockerd | grep -v grep | awk '{print $2}' | sudo xargs kill
   artifacts:
