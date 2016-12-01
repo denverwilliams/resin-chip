@@ -42,6 +42,8 @@ build:
   # manual interpolation of local.conf... FIXME:
   - sed -i "s:CI_PROJECT_PATH:${CI_PROJECT_PATH}:g" ./build/conf/local.conf
   - sed -i "s:CI_BUILD_REF_NAME:${CI_BUILD_REF_NAME}:g" ./build/conf/local.conf
+  - docker pull iichip/resin-cli
+  - docker run -ti -e EMAIL="$EMAIL" -e APP="$APP" -e PASSWORD="$PASSWORD" iichip/resin-cli > config.json
   - source layers/poky/oe-init-build-env
   #- bitbake -f -c compile docker-resin-supervisor-disk
   # Env dump would be nice at some point... but currently fails
